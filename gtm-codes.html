@@ -1,0 +1,112 @@
+<!--LIDANDO COM DATA LAYERS-->
+<script>
+  document.querySelector('#call button').addEventListener('click', function() {
+    setTimeout(function() {
+    	if (document.querySelectorAll('#call .error').length < 1) {
+        	dataLayer.push({
+            	event: 'aGenteLigaStep1'
+            });
+        }
+    },500);
+  });
+</script>
+<script>
+  $('.next').on('click.step2', function() {
+    setTimeout(function() {
+      if (!$('#profiles').hasClass('parsley-error')) {
+        $('.next').unbind('.step2');
+
+        dataLayer.push({
+          event: 'aGenteLigaStep2'
+        });
+      }
+    },500);
+  });
+</script>
+
+<!--EVENTO CHANGE (Select)-->
+<script>
+          (function() {
+            var formSelect = $('fieldset#formChooseCardContatc div.select select');
+            var idSelect = "";
+
+            for(i = 0; i < formSelect.length; i++){
+              formSelect[i].addEventListener('change', function() {
+                idSelect = $(this).siblings('span').text();
+                
+                window.dataLayer.push({ 
+                  event: 'selectChangeCT',
+                  field: idSelect
+              	});
+              });
+            }
+          })();
+</script>
+
+<script>
+  (function() {
+    var formSelect = $('#form-simulador-credito fieldset#formAddress div.select select');
+    var selectChild = "";
+    var selectSib = "";
+    var opcao = "";
+
+    $.each(formSelect, function(key,val) {
+      $(this).on('change', function() {
+        selectChild = $(this).children('option').text();
+        selectSib = $(this).siblings('span').text();
+
+        if(selectChild.match('estado') != null){
+          opcao = "Estado_Preenchido_"+$(this).children('option:selected').text();
+        }else{
+          if(selectSib.match('Selecione') == null){
+            opcao = "Ponto_Preenchido_"+$(this).children('option:selected').text();
+          }
+        }
+
+        window.dataLayer.push({ 
+          event: 'selectChangeAdressCred',
+          field: opcao
+        });
+      });
+    });
+  })();
+</script>
+
+<!--EVENTO FOCUS OUT-->
+<script>
+          (function() {
+            var formInput = $('form#form-pedir-cartao fieldset#formChooseCardContatc div input');
+            var idInput = "";
+            var name = "";
+
+            for(i = 0; i < formInput.length; i++){
+              formInput[i].addEventListener('focusout', function() {
+                idInput = $(this).siblings('label').text();
+                
+                if(idInput.match('Telefone') != null){
+                  name = "Telefone_Preenchido";
+                }else if(idInput.match('e-mail') != null){
+                  name = "Email_Preenchido";
+                }
+
+                window.dataLayer.push({ 
+                  event: 'focusOutContatoCT',
+                  field: name
+              	});
+              });
+            }
+          })();
+</script>
+
+<!--PASSANDO PRO GA-->
+<script>
+  var page = '/investimentos/formulario_investimento/nome';
+  ga('send', 'pageview', page);
+
+  ga('send', {
+    hitType: 'event',
+    eventCategory: 'Investimento - Formulário Investimento',
+    eventAction: 'Formulário_Etapa_1',
+    eventLabel: 'Nome'
+  });
+</script>
